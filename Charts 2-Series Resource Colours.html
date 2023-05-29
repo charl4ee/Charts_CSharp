@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Creating Charts in Windows Forms Using C#</title>
+    <style>
+        body{
+            width: 700px;
+            margin: auto;
+        }
+        pre {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+		.comment {
+            color: #579040;
+        }
+        .datatype {
+            color: #579CD4;
+        }
+        .varname {
+            color: #A0DBF7;
+        }
+        .ctrlstmt {
+            color: #D9A1C2;
+        }
+        .funcname {
+            color: #DCDCAA;
+        }
+        .funcdecl {
+            color: #579CD4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Creating Charts in Windows Forms Using C#</h1>
+
+    <p>This document provides an overview on how to create charts in a Windows Form application using C#. Two examples are presented, with the first showing how to add data series manually in the Properties, and the second demonstrating how to add them programmatically.</p>
+
+    <h2>Add Data Series in Properties</h2>
+
+    <p>The first method involves creating and modifying the series manually in the properties.</p>
+    <p>The method <code class="funcname">button1_Click</code> creates a chart with two series, "Age" and "Score", with each series having different values. It first sets the title of the chart and the labels of the X and Y axes. Then it adds points to each series by referencing their names. Each point is defined by an X and a Y value. Here, the X value is a string representing a name, and the Y value is an integer.</p>
+
+    <pre>
+<span class="funcdecl">private void</span> <span class="funcname">button1_Click</span>(<span class="datatype">object</span> <span class="varname">sender</span>, <span class="datatype">EventArgs</span> <span class="varname">e</span>)
+{
+    <span class="comment">//Series added manually in properties</span>
+    <span class="varname">chart1</span>.Titles.Add(<span class="datatype">"Age vs Score"</span>);
+    <span class="varname">chart1</span>.ChartAreas[0].AxisX.Title = <span class="datatype">"Names"</span>;
+    <span class="varname">chart1</span>.ChartAreas[0].AxisY.Title = <span class="datatype">"Value"</span>;
+    
+    <span class="comment">//reference the series by name - chart1.Series["Age"]</span>
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Age"</span>].Points.AddXY(<span class="datatype">"Max"</span>, 33);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Age"</span>].Points.AddXY(<span class="datatype">"John"</span>, 22);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Age"</span>].Points.AddXY(<span class="datatype">"Phil"</span>, 55);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Age"</span>].Points.AddXY(<span class="datatype">"Chad"</span>, 53);
+
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Score"</span>].Points.AddXY(<span class="datatype">"Max "</span>, 90);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Score"</span>].Points.AddXY(<span class="datatype">"John"</span>, 77);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Score"</span>].Points.AddXY(<span class="datatype">"Phil"</span>, 67);
+    <span class="varname">chart1</span>.Series[<span class="datatype">"Score"</span>].Points.AddXY(<span class="datatype">"Chad"</span>, 44);
+}
+    </pre>
+
+    <h2>Add Data Series Programmatically</h2>
+
+    <p>The second method involves creating and adding the series programmatically during runtime.</p>
+    <p>In the method <code class="funcname">button2_Click</code>, the chart is first cleared of all series. Then a title is set and labels are added for the axes. Two <code class="datatype">Series</code> objects, <code class="varname">ageSeries</code> and <code class="varname">scoreSeries</code>, are created and added to the chart. Points are added to these series in the same way as in the previous method.</p>
+
+    <pre>
+<span class="funcdecl">private void</span> <span class="funcname">button2_Click</span>(<span class="datatype">object</span> <span class="varname">sender</span>, <span class="datatype">EventArgs</span> <span class="varname">e</span>)
+{
+    <span class="comment">//Series added programmatically only</span>
+    <span class="varname">chart2</span>.Series.Clear();
+    <span class="varname">chart2</span>.Titles.Add(<span class="datatype">"Age vs Score"</span>);
+    <span class="varname">chart2</span>.ChartAreas[0].AxisX.Title = <span class="datatype">"Names"</span>;
+    <span class="varname">chart2</span>.ChartAreas[0].AxisY.Title = <span class="datatype">"Value"</span>;
+
+    <span class="comment">// Create the "Age" series and add it to the chart</span>
+    <span class="datatype">Series</span> <span class="varname">ageSeries</span> = new Series(<span class="datatype">"Age"</span>);
+    <span class="varname">chart2</span>.Series.Add(<span class="varname">ageSeries</span>);
+
+    <span class="comment">// Add points to the "Age" series</span>
+    <span class="comment">//reference the series by variable - ageSeries</span>
+    <span class="varname">ageSeries</span>.Points.AddXY(<span class="datatype">"Max"</span>, 33);
+    <span class="varname">ageSeries</span>.Points.AddXY(<span class="datatype">"John"</span>, 22);
+    <span class="varname">ageSeries</span>.Points.AddXY(<span class="datatype">"Phil"</span>, 55);
+    <span class="varname">ageSeries</span>.Points.AddXY(<span class="datatype">"Chad"</span>, 53);
+
+    <span class="comment">// Create the "Score" series and add it to the chart</span>
+    <span class="datatype">Series</span> <span class="varname">scoreSeries</span> = new Series(<span class="datatype">"Score"</span>);
+    <span class="varname">chart2</span>.Series.Add(<span class="varname">scoreSeries</span>);
+
+    <span class="comment">// Add points to the "Score" series</span>
+    <span class="varname">scoreSeries</span>.Points.AddXY(<span class="datatype">"Max"</span>, 90);
+    <span class="varname">scoreSeries</span>.Points.AddXY(<span class="datatype">"John"</span>, 77);
+    <span class="varname">scoreSeries</span>.Points.AddXY(<span class="datatype">"Phil"</span>, 67);
+    <span class="varname">scoreSeries</span>.Points.AddXY(<span class="datatype">"Chad"</span>, 44);
+}
+    </pre>
+
+    <p>When the form is loaded, all series from <code class="varname">chart2</code> are cleared. This isn't done for <code class="varname">chart1</code> because its series were added during design time.</p>
+
+    <pre>
+<span class="funcdecl">private void</span> <span class="funcname">Form1_Load</span>(<span class="datatype">object</span> <span class="varname">sender</span>, <span class="datatype">EventArgs</span> <span class="varname">e</span>)
+{
+    <span class="comment">//chart1.Series.Clear();</span>
+    <span class="comment">//Not possible for chart1 because it</span>
+    <span class="comment">//is added in design time</span>
+
+    <span class="varname">chart2</span>.Series.Clear();
+}
+    </pre>
+
+    <p>These examples should provide a solid starting point for implementing chart functionality in Windows Form applications using C#.</p>
+</body>
+</html>

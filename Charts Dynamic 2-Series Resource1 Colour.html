@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Creating Dynamic Charts in a C# Windows Forms Application</title>
+    <style>
+		body{
+				width: 750px;
+				margin: auto;
+			}
+        pre {
+            background-color: black;
+			color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .comment {
+            color: #579040;
+        }
+        .datatype {
+            color: #579CD4;
+        }
+        .varname {
+            color: #A0DBF7;
+        }
+        .ctrlstmt {
+            color: #D9A1C2;
+        }
+        .funcname {
+            color: #DCDCAA;
+        }
+        .funcdecl {
+            color: #579CD4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Creating Dynamic Charts in a C# Windows Forms Application</h1>
+    <p>This document provides an overview on how to create dynamic charts in a Windows Form application using C#. The example provided demonstrates how to generate a bar chart using data from a list and a two-dimensional array.</p>
+
+    <h2>Initial Setup</h2>
+	<p>Start by adding a button and a panel to the form.</p>
+    <p>Firstly, we add the necessary using directive for charting capabilities: <code>System.Windows.Forms.DataVisualization.Charting</code>. You will need to add a chart from the Toolbox to 
+	finalise the link. The chart must be deleted from the after the directive is recognised.</p>
+    <pre>
+<span class="comment">//Add namespace for charting</span>
+<span class="ctrlstmt">using</span> System.Windows.Forms.DataVisualization.Charting;
+    </pre>
+    <p>Then, we declare and initialize some data sources:</p>
+    <pre>
+<span class="comment">//Lists of districts and categories</span>
+<span class="datatype">List&lt;string&gt;</span> districtList = <span class="ctrlstmt">new</span> <span class="datatype">List&lt;string&gt;</span>() { "District1", "District2", "District3", "District4" };
+<span class="datatype">List&lt;string&gt;</span> categorieList = <span class="ctrlstmt">new</span> <span class="datatype">List&lt;string&gt;</span>() { "Burglary", "Theft" };
+
+<span class="comment">//Two-dimensional array containing the number of each category in each district</span>
+<span class="datatype">int</span>[,] numArr2D = <span class="ctrlstmt">new</span> <span class="datatype">int</span>[4,2]  {
+    {12,21},
+    {19,30},
+    {30,22},
+    {10,11}
+};
+    </pre>
+
+    <h2>Initialize the Chart</h2>
+    <p>We define a method to initialize the chart by creating a new ChartArea and a Legend object, which are then added to the Chart object. We also set the Dock property to <code>DockStyle.Fill</code> to make the chart fill its parent container.</p>
+    <pre>
+<span class="funcdecl">private void</span> <span class="funcname">InitialiseChart</span>()
+{
+    <span class="comment">//Instantiate chart and related elements</span>
+    ChartArea chartArea1 = <span class="ctrlstmt">new</span> ChartArea();
+    Legend legend = <span class="ctrlstmt">new</span> Legend() { BackColor = Color.Wheat, ForeColor = Color.Black };
+    barChart = <span class="ctrlstmt">new</span> Chart();
+    chartArea1 = <span class="ctrlstmt">new</span> ChartArea();
+
+    <span class="comment">//Assign a name to the chart area and add it to the chart</span>
+    chartArea1.Name = "BarChartArea";
+    barChart.ChartAreas.Add(chartArea1);
+
+    <span class="comment">//Add legend to the chart</span>
+    barChart.Legends.Add(legend);
+
+    <span class="comment">//Make the chart fill its parent container</span>
+    barChart.Dock = System.Windows.Forms.DockStyle.Fill;
+}
+    </pre>
+
+    <h2>Load Data into the Chart</h2>
+    <p>The <code>LoadBarChart()</code> method clears any existing series in the chart, sets some styling properties, and then adds new series for each category. Each series' points are then populated using the data from <code>districtList</code> and <code>numArr2D</code>.</p>
+    <pre>
+<span class="funcdecl">private void</span> <span class="funcname">LoadBarChart</span>()
+{
+    <span class="comment">//Clear any existing series</span>
+    barChart.Series.Clear();
+
+    <span class="comment">//Set styling properties</span>
+    barChart.BackColor = Color.LightYellow;
+    barChart.Palette = ChartColorPalette.Fire;
+    barChart.ChartAreas[0].BackColor = Color.Transparent;
+    barChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+    barChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
+    <span class="comment">//Loop through each category</span>
+    <span class="datatype">int</span> legendCount = 0;
+    <span class="ctrlstmt">foreach</span> (<span class="datatype">string</span> cat in categorieList)
+    {
+        <span class="comment">//Create a series for each category</span>
+        Series series = <span class="ctrlstmt">new</span> Series
+        {
+            Name = cat,
+            IsVisibleInLegend = true,
+            ChartType = SeriesChartType.Column
+        };
+
+        <span class="comment">//Add the series to the chart and set its legend text</span>
+        barChart.Series.Add(series);
+        barChart.Series[legendCount].LegendText = cat;
+        legendCount++;
+    }
+
+    <span class="comment">//Loop through each district</span>
+    <span class="datatype">int</span> countDis = 0;
+    <span class="ctrlstmt">foreach</span> (<span class="datatype">string</span> dis in districtList)
+    {
+        <span class="comment">//Loop through each category</span>
+        <span class="datatype">int</span> countCat = 0;
+        <span class="ctrlstmt">foreach</span> (<span class="datatype">string</span> cat in categorieList)
+        {
+            <span class="comment">//Add a point to the series for each category in each district</span>
+            barChart.Series[cat].Points.AddXY(dis, numArr2D[countDis, countCat]);
+            countCat++;
+        }
+        countDis++;
+    }
+}
+    </pre>
+
+    <h2>Loading the Chart</h2>
+    <p>Upon loading the form, we call the <code>InitialiseChart()</code> method to setup our chart:</p>
+    <pre>
+<span class="funcdecl">private void</span> Form1_Load(object sender, EventArgs e)
+{
+    <span class="comment">//Initialize the chart</span>
+    InitialiseChart();
+}
+    </pre>
+
+    <h2>Displaying the Chart</h2>
+    <p>Finally, we respond to a button click event by loading the data into the chart, recalculating the axes scale, and adding the chart to the <code>pnlChart</code> control:</p>
+    <pre>
+<span class="funcdecl">private void</span> button1_Click(object sender, EventArgs e)
+{
+    <span class="comment">//Load the data into the chart</span>
+    LoadBarChart();
+
+    <span class="comment">//Recalculate the axes scale</span>
+    barChart.ChartAreas[0].RecalculateAxesScale();
+
+    <span class="comment">//Add the chart to pnlChart control</span>
+    pnlChart.Controls.Add(barChart);
+}
+    </pre>
+    <p>The <code>RecalculateAxesScale()</code> method is used to recalculate the axis scales based on the current data points in the series.</p>
+    <p>This example should provide a solid starting point for implementing dynamic charts in a Windows Form application using C#.</p><br>
+	<p><strong>Now try replacing the constant data with similar data read from a csv file.</strong> <br>
+	<code><pre>
+District,Crime
+District4,Burglary
+District1,Theft
+District3,Burglary
+District2,Theft
+District1,Burglary
+District3,Theft
+District1,Burglary
+District4,Theft
+......
+</pre></code>
+	Each occurance of a crime should be counted as a single crime and added to the 2D array. <br>This array acts as a counter array, counting the crimes per district. Each row represents a district and each column a crime type.</p>
+</body>
+</html>
