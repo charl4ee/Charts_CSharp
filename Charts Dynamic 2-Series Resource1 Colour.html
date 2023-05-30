@@ -159,20 +159,21 @@
 }
     </pre>
     <p>The <code>RecalculateAxesScale()</code> method is used to recalculate the axis scales based on the current data points in the series.</p>
-    <p>This example should provide a solid starting point for implementing dynamic charts in a Windows Form application using C#.</p><br>
-	<p><strong>Now try replacing the constant data with similar data read from a csv file.</strong> <br>
+    <br>
+	<p><strong>Now try replacing the constant data with similar (random) data read from a csv file.</strong> <br>Example:
 	<code><pre>
 District,Crime
 District4,Burglary
 District1,Theft
 District3,Burglary
-District2,Theft
+District2,Burglary
 District1,Burglary
 District3,Theft
 District1,Burglary
 District4,Theft
-......
+......add more lines
 </pre></code>
-	Each occurance of a crime should be counted as a single crime and added to the 2D array. <br>This array acts as a counter array, counting the crimes per district. Each row represents a district and each column a crime type.</p>
+	Each occurance of a crime should be counted as a single crime and added to the corresponding position on the 2D array. Evaluate the lines one-by-one. <br>This array acts as a counter array, counting the crimes per district. Each row represents a district and each column a crime type as shown below.</p>
+	<img src="2DArray.png" width="300px">
 </body>
 </html>
